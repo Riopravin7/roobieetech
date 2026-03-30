@@ -145,6 +145,37 @@
             text-decoration: underline;
         }
 
+        .form-btn-google {
+            background: white;
+            color: #333;
+            width: 100%;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 15px;
+            padding: 16px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-btn-google:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+        }
+
+        body.light-mode .form-btn-google {
+            background: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
         /* Theme Toggle styles */
         .theme-toggle {
             position: fixed;
@@ -240,6 +271,11 @@
                 </div>
                 <button type="submit" class="login-btn">Sign In</button>
             </form>
+            <button class="form-btn-google" id="googleLoginBtn" type="button">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google Logo"
+                    style="width: 20px; height: 20px;">
+                Continue with Google
+            </button>
             <div class="bottom-links">
                 <a href="forgot-password.html">Forgot Password?</a><br><br>
                 Don't have an account? <a href="signup.html">Sign Up</a>
@@ -444,6 +480,43 @@
 
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas(); drawStars(); drawBokeh();
+
+        // New: Check for OAuth errors in the URL on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const error = params.get('error_description') || params.get('error');
+            if (error) {
+                console.error('Auth Error from URL:', error);
+                alert("Authentication Error: " + error.replace(/\+/g, ' '));
+                // Clean up the URL without refreshing
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl);
+            }
+        });
+
+        // ======= GOOGLE LOGIN =======
+        const googleLoginBtn = document.getElementById('googleLoginBtn');
+        if (googleLoginBtn) {
+            googleLoginBtn.addEventListener('click', async (e) => {
+                const originalHTML = googleLoginBtn.innerHTML;
+                googleLoginBtn.innerHTML = 'Connecting...';
+                googleLoginBtn.disabled = true;
+                try {
+                    const { error } = await supabaseClient.auth.signInWithOAuth({ 
+                        provider: 'google',
+                        options: { 
+                            redirectTo: window.location.origin,
+                            queryParams: { prompt: 'select_account' }
+                        }
+                    });
+                    if (error) throw error;
+                } catch (error) {
+                    alert(error.message);
+                    googleLoginBtn.innerHTML = originalHTML;
+                    googleLoginBtn.disabled = false;
+                }
+            });
+        }
 
         // ======= SUPABASE AUTH LOGIC =======
         const loginForm = document.getElementById('loginForm');

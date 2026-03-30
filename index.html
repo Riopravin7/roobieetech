@@ -1331,6 +1331,23 @@
             modalError.textContent = '';
         }
 
+        // New: Check for OAuth errors in the URL on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const error = params.get('error_description') || params.get('error');
+            if (error) {
+                console.error('Auth Error from URL:', error);
+                // Show modal with the error
+                setTimeout(() => {
+                    openModal();
+                    showError("Authentication Error: " + error.replace(/\+/g, ' '));
+                }, 500);
+                // Clean up the URL without refreshing
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl);
+            }
+        });
+
         // Feature 1: Show modal immediately on load to force user choice
         window.addEventListener('DOMContentLoaded', () => {
             document.getElementById('currentYear').textContent = new Date().getFullYear();
@@ -1498,7 +1515,10 @@ const openModal = (e) => {
             try {
                 const { error } = await supabaseClient.auth.signInWithOAuth({ 
                     provider: 'google',
-                    options: { redirectTo: window.location.origin + window.location.pathname }
+                    options: { 
+                        redirectTo: window.location.origin,
+                        queryParams: { prompt: 'select_account' }
+                    }
                 });
                 if (error) throw error;
             } catch (error) {
