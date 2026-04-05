@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Z Black Innovation & Tech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+            overflow: hidden;
+            background-color: #000;
+            /* Default dark */
+        }
+
+        /* Canvas backgrounds */
+        #starCanvas,
+        #lightCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* Login Container */
+        .login-wrapper {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .login-card:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            background: linear-gradient(90deg, #12c2e9, #c471ed, #f64f59);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            opacity: 0.8;
+            padding-left: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-family: inherit;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #12c2e9;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(18, 194, 233, 0.3);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(90deg, #12c2e9, #c471ed);
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(196, 113, 237, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .bottom-links {
+            margin-top: 25px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .bottom-links a {
+            color: #12c2e9;
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+
+        .bottom-links a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        .form-btn-google {
+            background: white;
+            color: #333;
+            width: 100%;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 15px;
+            padding: 16px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-btn-google:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+        }
+
+        body.light-mode .form-btn-google {
+            background: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Theme Toggle styles */
+        .theme-toggle {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg) scale(1.1);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Light Mode Overrides */
+        body.light-mode {
+            background-color: #f0f4f8;
+        }
+
+        body.light-mode .login-wrapper {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        body.light-mode .login-card {
+            background: rgba(255, 255, 255, 0.8);
+            color: #333;
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode input {
+            background: #fff;
+            color: #333;
+            border-color: #ddd;
+        }
+
+        body.light-mode label {
+            color: #555;
+            opacity: 1;
+        }
+
+        body.light-mode .bottom-links {
+            color: #666;
+            opacity: 1;
+        }
+    </style>
+
+    <!-- Theme Setup (Runs before page render to prevent flash) -->
+    <script>
+        (function() {
+            var savedTheme = localStorage.getItem("theme");
+            // Default to light mode if not explicitly dark
+            if (savedTheme !== "dark") {
+                document.body.classList.add("light-mode");
+                localStorage.setItem("theme", "light"); // ensure it is set for cross-page sync
+            }
+        })();
+    </script>
+</head>
+
+<body>
+    <!-- Theme Toggle -->
+    <div class="theme-toggle" id="themeToggle">
+        <svg id="themeIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </div>
+
+    <canvas id="starCanvas"></canvas>
+    <canvas id="lightCanvas"></canvas>
+
+    <div class="login-wrapper">
+        <div class="login-card">
+            <h1>Login</h1>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="name@company.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="login-btn">Sign In</button>
+            </form>
+            <button class="form-btn-google" id="googleLoginBtn" type="button">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google Logo"
+                    style="width: 20px; height: 20px;">
+                Continue with Google
+            </button>
+            <div class="bottom-links">
+                <a href="forgot-password.html">Forgot Password?</a><br><br>
+                Don't have an account? <a href="signup.html">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="supabase-config.js"></script>
+
+    <script>
+        // ======= THEME TOGGLE LOGIC =======
+        const body = document.body;
+        const toggleBtn = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const starCanvas = document.getElementById('starCanvas');
+        const lightCanvas = document.getElementById('lightCanvas');
+
+        function applyTheme(isLight) {
+            if (isLight) {
+                body.classList.add('light-mode');
+                themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+                themeIcon.setAttribute('stroke', '#333');
+                toggleBtn.style.background = 'rgba(0,0,0,0.05)';
+                starCanvas.style.opacity = '0';
+                lightCanvas.style.opacity = '1';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.remove('light-mode');
+                themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+                themeIcon.setAttribute('stroke', 'white');
+                toggleBtn.style.background = 'rgba(255,255,255,0.1)';
+                starCanvas.style.opacity = '1';
+                lightCanvas.style.opacity = '0';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        toggleBtn.addEventListener('click', () => applyTheme(!body.classList.contains('light-mode')));
+        applyTheme(localStorage.getItem('theme') === 'light');
+
+        // ======= STAR CANVAS (Moon Animation) =======
+        const ctx = starCanvas.getContext('2d');
+        const STAR_COUNT = 220;
+        let stars = [];
+
+        function resizeCanvas() {
+            starCanvas.width = window.innerWidth;
+            starCanvas.height = window.innerHeight;
+            lightCanvas.width = window.innerWidth;
+            lightCanvas.height = window.innerHeight;
+            initStars();
+            initBokeh();
+        }
+
+        function randomBetween(a, b) { return a + Math.random() * (b - a); }
+
+        function initStars() {
+            stars = [];
+            for (let i = 0; i < STAR_COUNT; i++) {
+                stars.push({
+                    x: randomBetween(0, starCanvas.width),
+                    y: randomBetween(0, starCanvas.height),
+                    radius: randomBetween(0.4, 1.8),
+                    alpha: randomBetween(0.2, 1),
+                    delta: randomBetween(0.003, 0.018) * (Math.random() < 0.5 ? 1 : -1),
+                    color: Math.random() < 0.15 ? '#c2e9ff' : (Math.random() < 0.1 ? '#ffd1a9' : '#ffffff')
+                });
+            }
+        }
+
+        // MOON SETUP
+        const MOON_R = 70;
+        let moonX, moonY;
+        const craters = [
+            { ox: -22, oy: -18, r: 9 }, { ox: 18, oy: -28, r: 6 },
+            { ox: -5, oy: 20, r: 7 }, { ox: 28, oy: 10, r: 5 },
+            { ox: -30, oy: 12, r: 4 }, { ox: 10, oy: -5, r: 4 },
+            { ox: -12, oy: 35, r: 5 }, { ox: 35, oy: -15, r: 3 }
+        ];
+
+        const clouds = [
+            { x: -MOON_R * 2, y: -12, speed: 0.18, scale: 1.0 },
+            { x: -MOON_R, y: 18, speed: 0.11, scale: 0.75 },
+            { x: MOON_R, y: -3, speed: 0.14, scale: 0.9 }
+        ];
+
+        function drawCloud(cx, cy, scale) {
+            const s = scale;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 18 * s, 0, Math.PI * 2);
+            ctx.arc(cx + 18 * s, cy - 8 * s, 14 * s, 0, Math.PI * 2);
+            ctx.arc(cx + 35 * s, cy, 16 * s, 0, Math.PI * 2);
+            ctx.arc(cx + 52 * s, cy - 4 * s, 12 * s, 0, Math.PI * 2);
+            ctx.arc(cx + 65 * s, cy, 14 * s, 0, Math.PI * 2);
+        }
+
+        function drawMoon() {
+            const t = Date.now() / 1000;
+            const angle = (t / 30) * Math.PI * 2;
+            const cx = starCanvas.width * 0.5;
+            const cy = starCanvas.height * 0.5;
+            const rx = starCanvas.width * 0.44;
+            const ry = starCanvas.height * 0.40;
+            moonX = cx + Math.cos(angle) * rx;
+            moonY = cy + Math.sin(angle) * ry;
+
+            const outerGlow = ctx.createRadialGradient(moonX, moonY, MOON_R * 0.7, moonX, moonY, MOON_R * 2.2);
+            outerGlow.addColorStop(0, 'rgba(240,240,180,0.18)');
+            outerGlow.addColorStop(0.4, 'rgba(220,220,140,0.08)');
+            outerGlow.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.beginPath(); ctx.arc(moonX, moonY, MOON_R * 2.2, 0, Math.PI * 2);
+            ctx.fillStyle = outerGlow; ctx.fill();
+
+            const moonGrad = ctx.createRadialGradient(moonX - MOON_R * 0.3, moonY - MOON_R * 0.3, MOON_R * 0.05, moonX, moonY, MOON_R);
+            moonGrad.addColorStop(0, '#f5f0d8'); moonGrad.addColorStop(0.45, '#ddd8b8');
+            moonGrad.addColorStop(0.8, '#b8b090'); moonGrad.addColorStop(1, '#807860');
+            ctx.beginPath(); ctx.arc(moonX, moonY, MOON_R, 0, Math.PI * 2);
+            ctx.fillStyle = moonGrad; ctx.fill();
+
+            craters.forEach(c => {
+                ctx.save(); ctx.beginPath();
+                ctx.arc(moonX + c.ox, moonY + c.oy, c.r, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(110,100,80,0.45)'; ctx.fill();
+                ctx.beginPath(); ctx.arc(moonX + c.ox - c.r * 0.3, moonY + c.oy - c.r * 0.3, c.r * 0.6, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255,255,230,0.22)'; ctx.fill();
+                ctx.restore();
+            });
+
+            const limbGrad = ctx.createRadialGradient(moonX + MOON_R * 0.4, moonY + MOON_R * 0.2, MOON_R * 0.3, moonX + MOON_R * 0.2, moonY, MOON_R * 1.1);
+            limbGrad.addColorStop(0, 'rgba(0,0,0,0)'); limbGrad.addColorStop(0.7, 'rgba(0,0,0,0.08)'); limbGrad.addColorStop(1, 'rgba(0,0,0,0.45)');
+            ctx.beginPath(); ctx.arc(moonX, moonY, MOON_R, 0, Math.PI * 2);
+            ctx.fillStyle = limbGrad; ctx.fill();
+
+            clouds.forEach(cl => {
+                cl.x += cl.speed; if (cl.x > MOON_R * 2.5) cl.x = -MOON_R * 2.2;
+                ctx.save(); ctx.beginPath(); ctx.arc(moonX, moonY, MOON_R, 0, Math.PI * 2); ctx.clip();
+                ctx.save(); ctx.globalAlpha = 0.28 * cl.scale; ctx.fillStyle = '#ffffff';
+                drawCloud(moonX + cl.x - 30, moonY + cl.y, cl.scale); ctx.fill();
+                ctx.restore(); ctx.restore();
+            });
+
+            const spec = ctx.createRadialGradient(moonX - MOON_R * 0.38, moonY - MOON_R * 0.38, 0, moonX - MOON_R * 0.2, moonY - MOON_R * 0.2, MOON_R * 0.65);
+            spec.addColorStop(0, 'rgba(255,255,240,0.30)'); spec.addColorStop(1, 'rgba(255,255,240,0)');
+            ctx.beginPath(); ctx.arc(moonX, moonY, MOON_R, 0, Math.PI * 2);
+            ctx.fillStyle = spec; ctx.fill();
+        }
+
+        function drawStars() {
+            ctx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+            drawMoon();
+            stars.forEach(s => {
+                s.alpha += s.delta;
+                if (s.alpha >= 1) { s.alpha = 1; s.delta = -Math.abs(s.delta); }
+                if (s.alpha <= 0.1) { s.alpha = 0.1; s.delta = Math.abs(s.delta); }
+                if (s.radius > 1.2) {
+                    const glow = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.radius * 3);
+                    glow.addColorStop(0, `rgba(200,230,255,${s.alpha * 0.6})`); glow.addColorStop(1, 'rgba(0,0,0,0)');
+                    ctx.beginPath(); ctx.arc(s.x, s.y, s.radius * 3, 0, Math.PI * 2);
+                    ctx.fillStyle = glow; ctx.fill();
+                }
+                ctx.beginPath(); ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+                ctx.fillStyle = s.color === '#c2e9ff' ? `rgba(194,233,255,${s.alpha})` : s.color === '#ffd1a9' ? `rgba(255,209,169,${s.alpha})` : `rgba(255,255,255,${s.alpha})`;
+                ctx.fill();
+            });
+            requestAnimationFrame(drawStars);
+        }
+
+        // BOKEH CANVAS
+        const lctx = lightCanvas.getContext('2d');
+        let bokeh = [];
+        function initBokeh() {
+            bokeh = [];
+            for (let i = 0; i < 35; i++) {
+                bokeh.push({
+                    x: Math.random() * lightCanvas.width,
+                    y: Math.random() * lightCanvas.height,
+                    r: 20 + Math.random() * 80,
+                    vx: (Math.random() - 0.5) * 0.3,
+                    vy: (Math.random() - 0.5) * 0.3,
+                    alpha: 0.05 + Math.random() * 0.15,
+                    color: Math.random() < 0.5 ? '18, 194, 233' : '196, 113, 237'
+                });
+            }
+        }
+        function drawBokeh() {
+            lctx.clearRect(0, 0, lightCanvas.width, lightCanvas.height);
+            bokeh.forEach(b => {
+                b.x += b.vx; b.y += b.vy;
+                if (b.x < -b.r) b.x = lightCanvas.width + b.r;
+                if (b.x > lightCanvas.width + b.r) b.x = -b.r;
+                if (b.y < -b.r) b.y = lightCanvas.height + b.r;
+                if (b.y > lightCanvas.height + b.r) b.y = -b.r;
+                const g = lctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
+                g.addColorStop(0, `rgba(${b.color}, ${b.alpha})`); g.addColorStop(1, 'rgba(255,255,255,0)');
+                lctx.beginPath(); lctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                lctx.fillStyle = g; lctx.fill();
+            });
+            requestAnimationFrame(drawBokeh);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas(); drawStars(); drawBokeh();
+
+        // New: Check for OAuth errors in the URL on load
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const error = params.get('error_description') || params.get('error');
+            if (error) {
+                console.error('Auth Error from URL:', error);
+                alert("Authentication Error: " + error.replace(/\+/g, ' '));
+                // Clean up the URL without refreshing
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl);
+            }
+        });
+
+        // ======= GOOGLE LOGIN =======
+        const googleLoginBtn = document.getElementById('googleLoginBtn');
+        if (googleLoginBtn) {
+            googleLoginBtn.addEventListener('click', async (e) => {
+                const originalHTML = googleLoginBtn.innerHTML;
+                googleLoginBtn.innerHTML = 'Connecting...';
+                googleLoginBtn.disabled = true;
+                try {
+                    const { error } = await supabaseClient.auth.signInWithOAuth({ 
+                        provider: 'google',
+                        options: { 
+                            redirectTo: window.location.origin,
+                            queryParams: { prompt: 'select_account' }
+                        }
+                    });
+                    if (error) throw error;
+                } catch (error) {
+                    alert(error.message);
+                    googleLoginBtn.innerHTML = originalHTML;
+                    googleLoginBtn.disabled = false;
+                }
+            });
+        }
+
+        // ======= SUPABASE AUTH LOGIC =======
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = loginForm.querySelector('.login-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Logging in...';
+            submitBtn.disabled = true;
+
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email: emailInput.value,
+                    password: passwordInput.value
+                });
+
+                if (error) throw error;
+
+                submitBtn.textContent = 'Securely Authenticated!';
+                submitBtn.style.background = 'linear-gradient(90deg, #10b981, #059669)';
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 800);
+            } catch (error) {
+                if (error.message.toLowerCase().includes('email not confirmed')) {
+                    alert('Please verify your email address. Check your inbox.');
+                } else if (error.message.toLowerCase().includes('invalid login credentials')) {
+                    alert('Invalid email or password. Please check your credentials.');
+                } else {
+                    alert(error.message);
+                }
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+
+
