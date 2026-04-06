@@ -1221,8 +1221,8 @@
                 <div class="footer-col" id="contact">
                     <h3>Contact Us</h3>
                     <ul class="footer-links" style="margin-top: 15px;">
-                        <li><a href="#">📍 123 Digital Boulevard, Tech City</a></li>
-                        <li><a href="#">📞 +1 (800) 123-4567</a></li>
+                        <li><a href="https://maps.google.com/?q=Madurai,Tamil+Nadu,India" target="_blank">📍 Madurai, Tamil Nadu, India</a></li>
+                        <li><a href="tel:+918903191729">📞 +91 89031 91729</a></li>
                         <li><a href="mailto:roobieetech@gmail.com">✉️ roobieetech@gmail.com</a></li>
                     </ul>
                     
@@ -1249,7 +1249,7 @@
                             </svg>
                         </a>
                         <!-- LinkedIn -->
-                        <a href="#" target="_blank" class="social-icon social-icon-li" onmouseover="if(!document.body.classList.contains('light-mode')) this.style.color='#0077B5'" onmouseout="if(!document.body.classList.contains('light-mode')) this.style.color='rgba(255,255,255,0.7)'">
+                        <a href="https://www.linkedin.com/in/roobiee-tech-aa473a3b7?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" class="social-icon social-icon-li" onmouseover="if(!document.body.classList.contains('light-mode')) this.style.color='#0077B5'" onmouseout="if(!document.body.classList.contains('light-mode')) this.style.color='rgba(255,255,255,0.7)'">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                             </svg>
@@ -1426,7 +1426,7 @@ const openModal = (e) => {
         // ======= LOGIN LOGIC =======
         modalLoginBtn.addEventListener('click', async () => {
             clearError();
-            const email = modalEmail.value;
+            const email = modalEmail.value.trim();
             const password = modalPassword.value;
 
             if (!email || !password) return showError("Please enter both email and password.");
@@ -1439,7 +1439,7 @@ const openModal = (e) => {
                 const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
                 if (error) throw error;
                 
-                modalLoginBtn.textContent = 'Success!';
+                modalLoginBtn.textContent = '✓ Success!';
                 modalLoginBtn.style.background = '#10b981';
                 modalLoginBtn.style.color = '#ffffff';
                 modalLoginBtn.style.borderColor = '#10b981';
@@ -1449,14 +1449,20 @@ const openModal = (e) => {
                     window.location.reload();
                 }, 800);
             } catch (error) {
-                if (error.message.toLowerCase().includes('email not confirmed')) {
-                    showError('Please verify your email address. Check your inbox.');
-                } else if (error.message.toLowerCase().includes('invalid login credentials')) {
-                    showError('Invalid email or password. Please check your credentials.');
+                const msg = error.message.toLowerCase();
+                if (msg.includes('email not confirmed')) {
+                    showError('⚠️ Email not confirmed. Check your inbox for a verification link.');
+                } else if (msg.includes('invalid login credentials') || msg.includes('invalid email or password')) {
+                    showError('❌ Wrong email or password. No account? Click Sign Up first.');
+                } else if (msg.includes('user not found')) {
+                    showError('❌ No account found. Please click Sign Up to create one.');
                 } else {
                     showError(error.message);
                 }
                 modalLoginBtn.textContent = originalText;
+                modalLoginBtn.style.background = '';
+                modalLoginBtn.style.color = '';
+                modalLoginBtn.style.borderColor = '';
                 modalLoginBtn.disabled = false;
             }
         });
@@ -1464,7 +1470,7 @@ const openModal = (e) => {
         // ======= SIGNUP LOGIC =======
         modalSignupBtn.addEventListener('click', async () => {
             clearError();
-            const email = modalEmail.value;
+            const email = modalEmail.value.trim();
             const password = modalPassword.value;
 
             if (!email || !password) return showError("Please enter both email and password.");
@@ -1475,18 +1481,58 @@ const openModal = (e) => {
                 return showError("Temporary email services are not allowed.");
             }
 
+            const originalText = modalSignupBtn.textContent;
+            modalSignupBtn.textContent = 'Creating account...';
+            modalSignupBtn.disabled = true;
+
             try {
-                const { error } = await supabaseClient.auth.signUp({
-                    email, password,
-                    options: { emailRedirectTo: window.location.origin + '/login.html' }
+                const siteOrigin = window.location.origin.startsWith('http') ? window.location.origin : 'http://localhost:3000';
+                const { data: signUpData, error: signUpError } = await supabaseClient.auth.signUp({
+                    email,
+                    password,
+                    options: {
+                        emailRedirectTo: siteOrigin + '/index.html'
+                    }
                 });
-                if (error) { showError(error.message); } else {
-                    showError('Success! Please check your email for a verification link.');
-                    modalEmail.value = '';
-                    modalPassword.value = '';
+
+                if (signUpError) throw signUpError;
+
+                // Try auto-login immediately (works if email confirmation is OFF in Supabase)
+                const { data: loginData, error: loginError } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+                if (!loginError && loginData.session) {
+                    // Signed up AND logged in successfully
+                    modalSignupBtn.textContent = '✓ Welcome!';
+                    modalSignupBtn.style.background = '#10b981';
+                    modalSignupBtn.style.color = '#ffffff';
+                    setTimeout(() => {
+                        closeModal();
+                        window.location.reload();
+                    }, 800);
+                } else {
+                    // Signed up but email confirmation required
+                    modalSignupBtn.textContent = '✓ Account Created!';
+                    modalSignupBtn.style.background = '#10b981';
+                    modalSignupBtn.style.color = '#ffffff';
+                    setTimeout(() => {
+                        showError('✅ Account created! Check your email for a confirmation link, then Login.');
+                        modalSignupBtn.textContent = originalText;
+                        modalSignupBtn.style.background = '';
+                        modalSignupBtn.style.color = '';
+                        modalSignupBtn.disabled = false;
+                    }, 1000);
                 }
             } catch (error) {
-                showError(error.message);
+                const msg = error.message.toLowerCase();
+                if (msg.includes('already registered') || msg.includes('already been registered') || msg.includes('user already registered')) {
+                    showError('This email is already registered. Please click Login instead.');
+                } else {
+                    showError(error.message);
+                }
+                modalSignupBtn.textContent = originalText;
+                modalSignupBtn.style.background = '';
+                modalSignupBtn.style.color = '';
+                modalSignupBtn.disabled = false;
             }
         });
 
@@ -1494,13 +1540,16 @@ const openModal = (e) => {
         modalForgotBtn.addEventListener('click', async (e) => {
             e.preventDefault();
             clearError();
-            const email = modalEmail.value;
+            const email = modalEmail.value.trim();
             if (!email) return showError("Please enter your email address first.");
 
             try {
-                const { error } = await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/reset-password.html' });
+                const siteOrigin = window.location.origin.startsWith('http') ? window.location.origin : 'http://localhost:3000';
+                const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+                    redirectTo: siteOrigin + '/reset-password.html'
+                });
                 if (error) throw error;
-                showError('Password reset email sent! Check your inbox.');
+                showError('✅ Password reset email sent! Check your inbox (and spam folder).');
             } catch (error) {
                 showError(error.message);
             }

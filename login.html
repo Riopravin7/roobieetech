@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Z Black Innovation & Tech</title>
+    <title>Login | Roobiee Tech</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body,
@@ -536,7 +536,7 @@
 
             try {
                 const { data, error } = await supabaseClient.auth.signInWithPassword({
-                    email: emailInput.value,
+                    email: emailInput.value.trim(),
                     password: passwordInput.value
                 });
 
@@ -548,10 +548,13 @@
                     window.location.href = 'index.html';
                 }, 800);
             } catch (error) {
-                if (error.message.toLowerCase().includes('email not confirmed')) {
-                    alert('Please verify your email address. Check your inbox.');
-                } else if (error.message.toLowerCase().includes('invalid login credentials')) {
-                    alert('Invalid email or password. Please check your credentials.');
+                const msg = error.message.toLowerCase();
+                if (msg.includes('email not confirmed')) {
+                    alert('⚠️ Please verify your email first. Check your inbox for a confirmation link.');
+                } else if (msg.includes('invalid login credentials') || msg.includes('invalid email or password')) {
+                    alert('❌ Wrong email or password.\n\nIf you don\'t have an account, please go to the Sign Up page first.');
+                } else if (msg.includes('user not found')) {
+                    alert('❌ No account found with this email. Please sign up first.');
                 } else {
                     alert(error.message);
                 }
