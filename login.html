@@ -502,10 +502,14 @@
                 googleLoginBtn.innerHTML = 'Connecting...';
                 googleLoginBtn.disabled = true;
                 try {
+                    // Always use a proper http:// URL — file:// breaks OAuth
+                    const origin = window.location.origin.startsWith('http') 
+                        ? window.location.origin 
+                        : 'http://localhost:3000';
                     const { error } = await supabaseClient.auth.signInWithOAuth({ 
                         provider: 'google',
                         options: { 
-                            redirectTo: window.location.origin,
+                            redirectTo: origin,
                             queryParams: { prompt: 'select_account' }
                         }
                     });

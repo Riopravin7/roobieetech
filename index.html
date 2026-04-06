@@ -1513,10 +1513,14 @@ const openModal = (e) => {
             btn.innerHTML = 'Connecting...';
             btn.disabled = true;
             try {
+                // Always use a proper http:// URL — file:// breaks OAuth
+                const origin = window.location.origin.startsWith('http') 
+                    ? window.location.origin 
+                    : 'http://localhost:3000';
                 const { error } = await supabaseClient.auth.signInWithOAuth({ 
                     provider: 'google',
                     options: { 
-                        redirectTo: window.location.origin,
+                        redirectTo: origin,
                         queryParams: { prompt: 'select_account' }
                     }
                 });
@@ -1572,27 +1576,29 @@ const openModal = (e) => {
         }
 
         // ======= SCROLL-REVEAL FOR MESSAGE LINES =======
-        const messageLines = document.querySelectorAll('.message-line');
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const index = Array.from(messageLines).indexOf(entry.target);
-                    setTimeout(() => { entry.target.classList.add('visible'); }, index * 120);
-                    revealObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.15 });
-        messageLines.forEach(line => revealObserver.observe(line));
+        document.addEventListener('DOMContentLoaded', () => {
+            const messageLines = document.querySelectorAll('.message-line');
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const index = Array.from(messageLines).indexOf(entry.target);
+                        setTimeout(() => { entry.target.classList.add('visible'); }, index * 120);
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.10 });
+            messageLines.forEach(line => revealObserver.observe(line));
 
-        // ======= SCROLL-REVEAL FOR TIMELINE ITEMS (repeats every scroll) =======
-        const timelineItems = document.querySelectorAll('.timeline-item');
-        const timelineObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) { entry.target.classList.add('visible'); }
-                else { entry.target.classList.remove('visible'); }
-            });
-        }, { threshold: 0.2 });
-        timelineItems.forEach(item => timelineObserver.observe(item));
+            // ======= SCROLL-REVEAL FOR TIMELINE ITEMS (repeats every scroll) =======
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            const timelineObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) { entry.target.classList.add('visible'); }
+                    else { entry.target.classList.remove('visible'); }
+                });
+            }, { threshold: 0.10 });
+            timelineItems.forEach(item => timelineObserver.observe(item));
+        });
 
         // ======= TIMELINE TITLE CLICK: SCROLL TO TOP + HIGHLIGHT TAG =======
         document.querySelectorAll('.timeline-title').forEach(title => {

@@ -1,6 +1,7 @@
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
@@ -19,6 +20,10 @@ app.use(cors({
     // origin: 'https://your-frontend.vercel.app'
 }));
 app.use(express.json());
+
+// Serve static frontend files from the website root (one level up from backend/)
+const rootDir = path.join(__dirname, '..');
+app.use(express.static(rootDir));
 
 // ───────────────────────────────────────────────
 // AUTH API ROUTES
@@ -72,9 +77,15 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Root route for Render test
+// Serve index.html at root
 app.get('/', (req, res) => {
-    res.send('Backend is running 🚀');
+    res.sendFile(path.join(rootDir, 'index.html'));
+});
+
+// Catch-all: any unmatched route (e.g. OAuth redirects) sends index.html
+// Supabase appends #access_token or ?code= to the URL — index.html handles it
+app.get('*', (req, res) => {
+    res.sendFile(path.join(rootDir, 'index.html'));
 });
 
 app.listen(PORT, () => {
