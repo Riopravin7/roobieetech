@@ -1543,15 +1543,34 @@ const openModal = (e) => {
             const email = modalEmail.value.trim();
             if (!email) return showError("Please enter your email address first.");
 
+            const originalText = modalForgotBtn.textContent;
+            modalForgotBtn.textContent = 'Sending Link...';
+            modalForgotBtn.disabled = true;
+
             try {
+                // Determine origin: use localhost if file:// (to ensure a valid redirect)
                 const siteOrigin = window.location.origin.startsWith('http') ? window.location.origin : 'http://localhost:3000';
+                
                 const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
                     redirectTo: siteOrigin + '/reset-password.html'
                 });
+
                 if (error) throw error;
-                showError('✅ Password reset email sent! Check your inbox (and spam folder).');
+                
+                showError('✅ Reset link sent! Check your inbox (and spam).');
+                modalForgotBtn.textContent = 'Link Sent!';
+                modalForgotBtn.style.background = '#10b981';
+                setTimeout(() => {
+                    modalForgotBtn.textContent = originalText;
+                    modalForgotBtn.style.background = '';
+                    modalForgotBtn.disabled = false;
+                }, 3000);
             } catch (error) {
-                showError(error.message);
+                console.error('Forgot Password Error:', error);
+                // If it still says "Error sending recovery email", it's a Supabase/SMTP issue.
+                showError(error.message + ' (Check SMTP settings in Supabase Console)');
+                modalForgotBtn.textContent = originalText;
+                modalForgotBtn.disabled = false;
             }
         });
 

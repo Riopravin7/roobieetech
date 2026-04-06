@@ -475,29 +475,34 @@
             const lastName = document.getElementById('lastName').value;
             const submitBtn = signupForm.querySelector('.signup-btn');
             const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Creating Account...';
+
+            submitBtn.textContent = 'Account Creation...';
             submitBtn.disabled = true;
 
             try {
+                // Ensure a valid authorized site origin
+                const siteOrigin = window.location.origin.startsWith('http') ? window.location.origin : 'http://localhost:3000';
+                
                 const { data, error } = await supabaseClient.auth.signUp({
                     email: emailInput.value,
                     password: passwordInput.value,
                     options: {
                         data: { first_name: firstName, last_name: lastName },
-                        emailRedirectTo: window.location.origin + '/login.html'
+                        emailRedirectTo: siteOrigin + '/login.html'
                     }
                 });
 
                 if (error) throw error;
 
-                submitBtn.textContent = 'Success!';
+                submitBtn.textContent = '✓ Success!';
                 submitBtn.style.background = 'linear-gradient(90deg, #10b981, #059669)';
                 setTimeout(() => {
-                    alert('Account created! A verification email has been sent to ' + data.user.email + '. Please verify before logging in.');
+                    alert('✅ Success! A verification email has been sent to ' + data.user.email + '. Please check your inbox and verify before logging in.');
                     window.location.href = 'login.html';
                 }, 800);
             } catch (error) {
-                alert(error.message);
+                console.error('Signup Error:', error);
+                alert('Error: ' + error.message + '\n\nIf you see "Error sending verification email", please check your Supabase Dashboard SMTP settings.');
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
             }
