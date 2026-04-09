@@ -178,224 +178,186 @@
         body.light-mode .card-cta { background: linear-gradient(135deg,#8b5cf6,#6d28d9); }
         /* ===== NAV (from index) ===== */
         nav { position: fixed; top: 0; left: 0; width: 100%; padding: 25px 0; display: flex; justify-content: center; z-index: 10; }
-        .nav-container { display: flex; justify-content: space-between; align-items: center; width: 90%; max-width: 1200px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 50px; padding: 12px 35px; border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
-        .nav-logo { color: white; font-weight: 700; font-size: 1.6rem; text-decoration: none; letter-spacing: -1px; }
-        .nav-links { display: flex; gap: 35px; }
-        .nav-links a { color: white; text-decoration: none; font-weight: 600; font-size: 1rem; opacity: 0.8; transition: all 0.3s ease; }
-        .nav-links a:hover { opacity: 1; transform: translateY(-2px); text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
-        .nav-auth { display: flex; gap: 15px; align-items: center; }
-        .auth-btn { color: white; text-decoration: none; font-weight: 600; font-size: 0.95rem; padding: 10px 24px; border-radius: 30px; transition: all 0.3s ease; }
-        .login-btn { border: 1px solid rgba(255, 255, 255, 0.4); background: none; cursor: pointer; font-family: inherit; }
-        .login-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: white; }
-        .signup-btn { background: white; color: #12c2e9; box-shadow: 0 4px 15px rgba(255, 255, 255, 0.25); border: none; cursor: pointer; font-family: inherit; }
-        .signup-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255, 255, 255, 0.4); }
-        body.light-mode .nav-container { background: rgba(255,255,255,0.72); backdrop-filter: blur(24px); border-color: rgba(255,255,255,0.9); }
-        body.light-mode .nav-logo { color: #1a1a2e; }
-        body.light-mode .nav-links a { color: #1a1a2e; }
-        body.light-mode .login-btn { border-color: rgba(0,0,0,0.3); color: #1a1a2e; }
-        body.light-mode .signup-btn { background: #12c2e9; color: #fff; }
-        .theme-toggle {
-            background: none;
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            border-radius: 50%;
-            width: 38px;
-            height: 38px;
+                                .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 95%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 50px;
+            padding: 10px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            gap: 20px;
+        }
+
+        .nav-logo {
             display: flex;
             align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            gap: 12px;
+            text-decoration: none;
             color: white;
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: -1px;
+            transition: all 0.3s ease;
             flex-shrink: 0;
         }
-        .theme-toggle:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: rotate(20deg) scale(1.1);
+
+        .nav-logo-img {
+            height: 48px; /* High quality size */
+            width: auto;
+            border-radius: 10px;
+            filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.2));
+            transition: all 0.3s ease;
+            margin-top: 6px; /* Slightly down */
         }
-        body.light-mode .theme-toggle {
-            border-color: rgba(102, 126, 234, 0.4);
-            color: #667eea;
+
+        .nav-logo:hover .nav-logo-img {
+            transform: scale(1.1) rotate(-3deg);
+            filter: drop-shadow(0 0 18px rgba(18, 194, 233, 0.4));
         }
-        body.light-mode .theme-toggle:hover {
-            background: rgba(102, 126, 234, 0.12);
-        }        </style>
-</head>
-<body>
-    
-    <!-- Theme Setup (Runs instantly before page render) -->
-    <script>
-        (function() {
-            var savedTheme = localStorage.getItem('theme');
-            if (savedTheme !== 'dark') {
-                document.body.classList.add('light-mode');
-                localStorage.setItem('theme', 'light');
-            }
-        })();
-    </script>
-<canvas id="starCanvas"></canvas><canvas id="lightCanvas"></canvas>
 
-    <div class="page-content" id="mainContent">
-        <!-- Navigation Header -->
-        <nav>
-            <div class="nav-container">
-                <a href="index.html" class="nav-logo">Roobiee Tech</a>
-                <div class="nav-links">
-                    <a href="index.html">Home</a>
-                    <a href="index.html#about">About</a>
-                    <a href="index.html#servicesTimeline">Capabilities</a>
-                    <a href="index.html#contact">Contact</a>
-                </div>
-                                <div class="nav-auth" id="navAuth">
-                    <button class="theme-toggle" id="themeToggle" title="Switch theme" onclick="toggleTheme()">
-                        <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                        </svg>
-                    </button>
-                    <a href="#" class="auth-btn login-btn" id="navLoginBtn">Login</a>
-                    <a href="#" class="auth-btn signup-btn" id="navSignupBtn">Sign Up</a>
-                </div>
-            </div>
-        </nav>
-
-        <div class="hero">
-            <div class="hero-badge">✦ Premium Web Design</div>
-            <h1>Website Design</h1>
-            <p>Professional Website Design Services</p>
-            <p style="margin-top: 15px; opacity: 0.8; max-width: 700px; margin-left: auto; margin-right: auto;">We provide modern and professional website design services to help businesses, startups, and individuals create a strong online presence. Our websites are designed to be user-friendly, responsive, and visually attractive, ensuring a better experience for visitors on all devices.<br><br>A well-designed website helps businesses showcase their services, attract customers, and grow their brand online.</p>
-        </div>
-
-        <div class="service-content-wrapper">
-            <!-- Our Website Design Services -->
-            <div class="service-card visible">
-                <span class="card-icon">💻</span>
-                <h3 style="text-align: center; margin-bottom: 25px; font-size: 1.5rem; color:#00c6ff;">Our Website Design Services</h3>
-                <p style="color: rgba(255,255,255,0.85); line-height: 1.7; margin-bottom: 25px; text-align: center;">We offer different types of website design solutions including:</p>
-                <div class="services-sub-grid">
-                    <div class="sub-grid-item"><span>🏢</span><h4>Business Website Design</h4></div>
-                    <div class="sub-grid-item"><span>🎨</span><h4>Personal Portfolio Websites</h4></div>
-                    <div class="sub-grid-item"><span>🛬</span><h4>Landing Page Design</h4></div>
-                    <div class="sub-grid-item"><span>📱</span><h4>Responsive Website Design (Mobile-Friendly)</h4></div>
-                    <div class="sub-grid-item"><span>🔄</span><h4>Website Redesign and Improvements</h4></div>
-                </div>
-            </div>
-
-            <!-- Features -->
-            <div class="service-card visible">
-                <h3 style="text-align: center; margin-bottom: 30px; font-size: 1.5rem; color:#00c6ff;">Features of Our Websites</h3>
-                <ul class="feature-list" style="max-width: 500px; margin: 0 auto;">
-                    <li>Modern and clean design</li>
-                    <li>Mobile-friendly and responsive layout</li>
-                    <li>Fast loading performance</li>
-                    <li>Easy navigation for users</li>
-                    <li>SEO-friendly structure</li>
-                </ul>
-            </div>
-
-            <!-- Why Choose Us -->
-            <div class="service-card visible">
-                <h3 style="text-align: center; margin-bottom: 30px; font-size: 1.5rem; color:#00c6ff;">Why Choose Our Website Design</h3>
-                <ul class="feature-list" style="max-width: 500px; margin: 0 auto;">
-                    <li>Professional design approach</li>
-                    <li>Customized website solutions</li>
-                    <li>Focus on user experience</li>
-                    <li>Support for website updates and improvements</li>
-                </ul>
-            </div>
-
-            <!-- Who Can Use & Get Today -->
-            <div class="service-card visible">
-                <h3 style="text-align: center; margin-bottom: 25px; font-size: 1.5rem; color:#00c6ff;">Who Can Use Our Services</h3>
-                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 30px;">
-                    <span style="background: rgba(0,198,255,0.15); border: 1px solid rgba(0,198,255,0.3); color: #00c6ff; padding: 6px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">Small Businesses</span>
-                    <span style="background: rgba(0,198,255,0.15); border: 1px solid rgba(0,198,255,0.3); color: #00c6ff; padding: 6px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">Startups</span>
-                    <span style="background: rgba(0,198,255,0.15); border: 1px solid rgba(0,198,255,0.3); color: #00c6ff; padding: 6px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">Entrepreneurs</span>
-                    <span style="background: rgba(0,198,255,0.15); border: 1px solid rgba(0,198,255,0.3); color: #00c6ff; padding: 6px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">Personal Brand Websites</span>
-                    <span style="background: rgba(0,198,255,0.15); border: 1px solid rgba(0,198,255,0.3); color: #00c6ff; padding: 6px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 600;">Students and Professionals</span>
-                </div>
-                
-                <h3 style="text-align: center; margin-bottom: 15px; font-size: 1.5rem; color:#00c6ff;">Get Your Website Today</h3>
-                <p style="text-align: center; color: rgba(255,255,255,0.85); font-style: italic; margin-bottom: 25px;">Create a professional website and build your digital presence with our website design services.</p>
-                <a href="https://forms.gle/wNJX62SXVtH2ewSD6" target="_blank" class="card-cta" style="text-decoration: none; display: block;">Start Building Now</a>
-            </div>
-        </div>
-
-        <footer>
-            <div class="footer-container">
-                <!-- About Us Column -->
-                <div class="footer-col" id="about">
-                    <h3>About Us</h3>
-                    <p style="margin-top: 15px;">We are a leading IT firm dedicated to seamlessly blending raw
-                        electronic engineering with leading-edge software architecture. We turn concepts into robust,
-                        digital realities with clarity and premium style.</p>
-                </div>
-
-                <!-- Quick Links Column -->
-                <div class="footer-col" style="padding-left: 10%;">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links" style="margin-top: 15px;">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html#servicesTimeline">Our Capabilities</a></li>
-                        <li><a href="index.html#contact">Contact</a></li>
-                    </ul>
-                </div>
-
-                <!-- Contact Column -->
-                <div class="footer-col" id="contact">
-                    <h3>Contact Us</h3>
-                    <ul class="footer-links" style="margin-top: 15px;">
-                        <li><a href="https://maps.google.com/?q=Madurai,Tamil+Nadu,India" target="_blank">📍 Madurai, Tamil Nadu, India</a></li>
-                        <li><a href="tel:+918903191729">📞 +91 89031 91729</a></li>
-                        <li><a href="mailto:roobieetech@gmail.com">✉️ roobieetech@gmail.com</a></li>
-                    </ul>
-
-                    <!-- Social Media Links -->
-                    <div style="margin-top: 25px; display: flex; gap: 15px;">
-                        <style>
-                            .social-icon { color: rgba(255,255,255,0.7); transition: color 0.3s; }
-                            body.light-mode .social-icon { color: #555; }
-                            body.light-mode .social-icon-wa:hover { color: #25D366 !important; }
-                            body.light-mode .social-icon-ig:hover { color: #E1306C !important; }
-                            body.light-mode .social-icon-li:hover { color: #0077B5 !important; }
-                            body.light-mode .social-icon-yt:hover { color: #FF0000 !important; }
-                        
-        
-        /* ===== LIGHT MODE ===== */
-        @keyframes skyShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        body.light-mode {
-            background: linear-gradient(135deg, #e8f4fd, #fce4ec, #f3e5f5, #e8f5e9, #fff8e1, #e3f2fd);
-            background-size: 400% 400%;
-            animation: skyShift 18s ease infinite;
-            color: #1a1a2e;
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            margin-left: 20px;
+            flex-grow: 1;
         }
-        body.light-mode .hero h1 { background: linear-gradient(135deg,#1a1a2e 30%,#8b5cf6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-        body.light-mode .hero p { color: #111; opacity: 1; font-weight: 500; }
-        body.light-mode .hero-badge { background: rgba(139,92,246,0.12); border-color: rgba(139,92,246,0.3); color: #7c3aed; }
-        body.light-mode .service-card { background: rgba(255,255,255,0.88); border-color: rgba(139,92,246,0.15); box-shadow: 0 10px 40px rgba(139,92,246,0.1); }
-        body.light-mode .feature-list li { color: #111; font-weight: 600; border-color: rgba(0,0,0,0.05); }
-        body.light-mode .sub-grid-item { background: #fff; border-color: rgba(0,0,0,0.05); }
-        body.light-mode .sub-grid-item h4 { color: #1a1a2e; }
-        body.light-mode .service-card p, body.light-mode .sub-grid-item p { color: #111 !important; }
-        body.light-mode footer { background: rgba(255,255,255,0.65); backdrop-filter: blur(20px); border-color: rgba(139,92,246,0.15); }
-        body.light-mode .footer-col h3 { color: #7c3aed; }
-        body.light-mode .footer-col h3::after { background: linear-gradient(to right, #8b5cf6, #6d28d9); }
-        body.light-mode .footer-col p, body.light-mode .footer-links a, body.light-mode .footer-bottom { color: #333; }
-        body.light-mode .footer-links a:hover { color: #7c3aed; }
-        body.light-mode .card-cta { background: linear-gradient(135deg,#8b5cf6,#6d28d9); }
-                /* ===== NAV (from index) ===== */
-        nav { position: fixed; top: 0; left: 0; width: 100%; padding: 25px 0; display: flex; justify-content: center; z-index: 10; }
-        .nav-container { display: flex; justify-content: space-between; align-items: center; width: 90%; max-width: 1200px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 50px; padding: 12px 35px; border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
-        .nav-logo { color: white; font-weight: 700; font-size: 1.6rem; text-decoration: none; letter-spacing: -1px; }
-        .nav-links { display: flex; gap: 35px; }
-        .nav-links a { color: white; text-decoration: none; font-weight: 600; font-size: 1rem; opacity: 0.8; transition: all 0.3s ease; }
-        .nav-links a:hover { opacity: 1; transform: translateY(-2px); text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
-        .nav-auth { display: flex; gap: 15px; align-items: center; }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-auth {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .auth-btn { color: white; text-decoration: none; font-weight: 600; font-size: 0.95rem; padding: 10px 24px; border-radius: 30px; transition: all 0.3s ease; }
+        .login-btn { border: 1px solid rgba(255, 255, 255, 0.4); background: none; cursor: pointer; font-family: inherit; }
+        .login-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: white; }
+        .signup-btn { background: white; color: #12c2e9; box-shadow: 0 4px 15px rgba(255, 255, 255, 0.25); border: none; cursor: pointer; font-family: inherit; }
+        .signup-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255, 255, 255, 0.4); }
+        body.light-mode                         .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 95%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 50px;
+            padding: 10px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            gap: 20px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: -1px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .nav-logo-img {
+            height: 48px; /* High quality size */
+            width: auto;
+            border-radius: 10px;
+            filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.2));
+            transition: all 0.3s ease;
+            margin-top: 6px; /* Slightly down */
+        }
+
+        .nav-logo:hover .nav-logo-img {
+            transform: scale(1.1) rotate(-3deg);
+            filter: drop-shadow(0 0 18px rgba(18, 194, 233, 0.4));
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            margin-left: 20px;
+            flex-grow: 1;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-auth {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-shrink: 0;
+        }
         .auth-btn { color: white; text-decoration: none; font-weight: 600; font-size: 0.95rem; padding: 10px 24px; border-radius: 30px; transition: all 0.3s ease; }
         .login-btn { border: 1px solid rgba(255, 255, 255, 0.4); background: none; cursor: pointer; font-family: inherit; }
         .login-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: white; }
         .signup-btn { background: white; color: #12c2e9; box-shadow: 0 4px 15px rgba(255, 255, 255, 0.25); border: none; cursor: pointer; font-family: inherit; }
         .signup-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255, 255, 255, 0.4); }
         body.light-mode .nav-container { background: rgba(255,255,255,0.72); backdrop-filter: blur(24px); border-color: rgba(255,255,255,0.9); }
-        body.light-mode .nav-logo { color: #1a1a2e; }
+        body.light-mode         .nav-logo {
+            color: white;
+            font-weight: 700;
+            font-size: 1.6rem;
+            text-decoration: none;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-logo-img {
+            height: 45px;
+            width: auto;
+            border-radius: 8px;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+            transition: all 0.3s ease;
+        }
+
+        .nav-logo:hover .nav-logo-img {
+            transform: scale(1.1) rotate(-5deg);
+            filter: drop-shadow(0 0 15px rgba(18, 194, 233, 0.4));
+        }
         body.light-mode .nav-links a { color: #1a1a2e; }
         body.light-mode .login-btn { border-color: rgba(0,0,0,0.3); color: #1a1a2e; }
         body.light-mode .signup-btn { background: #12c2e9; color: #fff; }

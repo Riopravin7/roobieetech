@@ -40,12 +40,79 @@
 
         /* ===== NAV ===== */
         nav { position: fixed; top: 0; left: 0; width: 100%; padding: 25px 0; display: flex; justify-content: center; z-index: 10; }
-        .nav-container { display: flex; justify-content: space-between; align-items: center; width: 90%; max-width: 1200px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 50px; padding: 12px 35px; border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
-        .nav-logo { color: white; font-weight: 700; font-size: 1.6rem; text-decoration: none; letter-spacing: -1px; }
-        .nav-links { display: flex; gap: 35px; }
-        .nav-links a { color: white; text-decoration: none; font-weight: 600; font-size: 1rem; opacity: 0.8; transition: all 0.3s ease; }
-        .nav-links a:hover { opacity: 1; transform: translateY(-2px); text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
-        .nav-auth { display: flex; gap: 15px; align-items: center; }
+                                .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 95%;
+            max-width: 1200px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 50px;
+            padding: 10px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            gap: 20px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: white;
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: -1px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .nav-logo-img {
+            height: 48px; /* High quality size */
+            width: auto;
+            border-radius: 10px;
+            filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.2));
+            transition: all 0.3s ease;
+            margin-top: 6px; /* Slightly down */
+        }
+
+        .nav-logo:hover .nav-logo-img {
+            transform: scale(1.1) rotate(-3deg);
+            filter: drop-shadow(0 0 18px rgba(18, 194, 233, 0.4));
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            margin-left: 20px;
+            flex-grow: 1;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+            transform: translateY(-2px);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-auth {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-shrink: 0;
+        }
         .auth-btn { color: white; text-decoration: none; font-weight: 600; font-size: 0.95rem; padding: 10px 24px; border-radius: 30px; transition: all 0.3s ease; }
         .login-btn { border: 1px solid rgba(255, 255, 255, 0.4); background: none; cursor: pointer; font-family: inherit; }
         .login-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: white; }
@@ -204,7 +271,29 @@
             color: #1a1a2e;
         }
         body.light-mode .nav-container { background: rgba(255,255,255,0.72); backdrop-filter: blur(24px); border-color: rgba(255,255,255,0.9); box-shadow: 0 4px 24px rgba(100,120,200,0.12); }
-        body.light-mode .nav-logo { color: #000; font-weight: 800; }
+        body.light-mode         .nav-logo {
+            color: white;
+            font-weight: 700;
+            font-size: 1.6rem;
+            text-decoration: none;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-logo-img {
+            height: 45px;
+            width: auto;
+            border-radius: 8px;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+            transition: all 0.3s ease;
+        }
+
+        .nav-logo:hover .nav-logo-img {
+            transform: scale(1.1) rotate(-5deg);
+            filter: drop-shadow(0 0 15px rgba(18, 194, 233, 0.4));
+        }
         body.light-mode .nav-links a { color: #111; font-weight: 700; }
         body.light-mode .nav-links a:hover { color: #667eea; }
         body.light-mode .login-btn { border-color: #667eea; color: #667eea; }
@@ -263,7 +352,10 @@
     <!-- NAV -->
     <nav>
         <div class="nav-container">
-            <a href="index.html" class="nav-logo">Roobiee Tech</a>
+            <a href="index.html" class="nav-logo">
+                    <img src="logo.jpg" alt="Roobiee Tech Logo" class="nav-logo-img">
+                    Roobiee Tech
+                </a>
             <div class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="index.html#about">About</a>

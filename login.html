@@ -230,6 +230,50 @@
             color: #666;
             opacity: 1;
         }
+                                    .auth-logo-internal {
+            display: block;
+            text-align: center;
+            margin-bottom: 30px;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .auth-logo-internal:hover {
+            transform: scale(1.05);
+        }
+
+        .auth-logo-img {
+            height: 90px;
+            width: auto;
+            border-radius: 15px;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+            background: white; /* ensures the logo background looks like a clean card element */
+            padding: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.light-mode .auth-logo-img {
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+            border-color: rgba(0, 0, 0, 0.05);
+        }
+
+        
+
+        
+
+        body.light-mode 
+
+        
+
+        
+
+        
+
+        
+
+        .auth-logo:hover 
+
+        body.light-mode 
     </style>
 
     <!-- Theme Setup (Runs before page render to prevent flash) -->
@@ -246,6 +290,7 @@
 </head>
 
 <body>
+    
     <!-- Theme Toggle -->
     <div class="theme-toggle" id="themeToggle">
         <svg id="themeIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
@@ -259,6 +304,9 @@
 
     <div class="login-wrapper">
         <div class="login-card">
+            <a href="index.html" class="auth-logo-internal">
+                <img src="logo.jpg" alt="Roobiee Tech Logo" class="auth-logo-img">
+            </a>
             <h1>Login</h1>
             <form id="loginForm">
                 <div class="form-group">
